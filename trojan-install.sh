@@ -81,7 +81,7 @@ cat > config_client.json <<-EOF
     "run_type": "client",
     "local_addr": "127.0.0.1",
     "local_port": 1080,
-    "remote_addr": "$your_domain",
+    "remote_addr": "$trojan_domain",
     "remote_port": 443,
     "password": [
         "$trojan_passwd"
@@ -120,7 +120,7 @@ mode: rule
 log-level: info
 external-controller: '127.0.0.1:9090'
 proxies:
-    - {type: trojan, name: 'trojan', server: '$your_domain', port: 443, password: '$trojan_passwd', sni: download.windowsupdate.com, skip-cert-verify: true}
+    - {type: trojan, name: 'trojan', server: '$trojan_domain', port: 443, password: '$trojan_passwd', sni: download.windowsupdate.com, skip-cert-verify: true}
 proxy-groups:
     - {name: Proxy, type: select, proxies: [自动选择, 'American.trojan']}
     - {name: 自动选择, type: url-test, proxies: ['American.trojan'], url: 'http://www.gstatic.com/generate_204', interval: 300} 
