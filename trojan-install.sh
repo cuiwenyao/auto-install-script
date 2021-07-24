@@ -21,7 +21,7 @@ read -p "请输入你的域名 :" trojan_domain
 read -p "请输入密码 :" trojan_passwd
 
 # 写入配置文件
-    cat > config.json <<-EOF
+    cat > /etc/trojan/config.json <<-EOF
 {
     "run_type": "server",
     "local_addr": "0.0.0.0",
