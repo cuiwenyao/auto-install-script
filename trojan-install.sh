@@ -48,6 +48,7 @@ systemctl stop apache2
 
 #写入nginx配置
 green "正在写入nginx配置文件 /etc/nginx/nginx.conf"
+rm /etc/nginx/nginx.conf
         cat > /etc/nginx/nginx.conf <<-EOF
 user  root;
 worker_processes  1;
@@ -75,6 +76,7 @@ EOF
 
 
 # 写入配置文件
+rm /etc/trojan/config.json
     cat > /etc/trojan/config.json <<-EOF
 {
     "run_type": "server",
@@ -128,6 +130,7 @@ EOF
 }
 EOF
 
+rm /lib/systemd/system/trojan.service
     cat > /lib/systemd/system/trojan.service <<-EOF
 [Unit]
 Description=trojan
@@ -151,8 +154,9 @@ EOF
 systemctl daemon-reload
 
 green "正在设置伪装站点，这里用的是我的博客"
-rm -r /etc/nginx/html
+rm -rf /etc/nginx/html
 mkdir /etc/nginx/html
+rm -rf cuiwneyao.io
 git clone https://github.com/cuiwenyao/cuiwenyao.io.git
 mv cuiwenyao.io/* /etc/nginx/html/
 rm -rf cuiwneyao.io
@@ -163,9 +167,11 @@ green "注册acme for ${trojan_email}"
 ~/.acme.sh/acme.sh --register-account -m ${trojan_email}
 systemctl stop nginx
 systemctl stop trojan
+rm -rf ~/.acme/${trojan_domain}
 ~/.acme.sh/acme.sh  --issue --standalone -d ${trojan_domain}
 
 green "安装证书 for ${trojan_domain}"
+rm -rf /etc/trojan/trojancert/${trojan_domain}/
 mkdir -p /etc/trojan/trojancert/${trojan_domain}/
 ~/.acme.sh/acme.sh  --installcert  -d  ${trojan_domain}   \
     --key-file   /etc/trojan/trojancert/${trojan_domain}/private.key \
@@ -191,6 +197,7 @@ green "config_client.json中为Linux下的proxy客户端配置示例"
 green "config_clash.yml中为clash下的proxy客户端配置示例"
 
 #Linux client 
+rm -rf config_client.json
 cat > config_client.json <<-EOF
 {
     "run_type": "client",
@@ -226,6 +233,7 @@ cat > config_client.json <<-EOF
 EOF
 
 #clash 
+rm -rf config_clash.yml
 cat > config_clash.yml <<-EOF
 port: 7890
 socks-port: 7891
