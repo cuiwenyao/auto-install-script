@@ -79,7 +79,7 @@ EOF
     "run_type": "server",
     "local_addr": "0.0.0.0",
     "local_port": 443,
-    "remote_addr": "$trojan_domain",
+    "remote_addr": "127.0.0.1",
     "remote_port": 80,
     "password": [
         "$trojan_passwd"
@@ -89,11 +89,15 @@ EOF
         "cert": "/etc/trojan/trojancert/${trojan_domain}/fullchain.cer",
         "key": "/etc/trojan/trojancert/${trojan_domain}/private.key",
         "key_password": "",
-        "cipher_tls13":"TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384",
+        "cipher": "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384",
+        "cipher_tls13": "TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384",
         "prefer_server_cipher": true,
         "alpn": [
             "http/1.1"
         ],
+        "alpn_port_override": {
+            "h2": 81
+        },
         "reuse_session": true,
         "session_ticket": false,
         "session_timeout": 600,
@@ -102,8 +106,10 @@ EOF
         "dhparam": ""
     },
     "tcp": {
+        "prefer_ipv4": false,
         "no_delay": true,
         "keep_alive": true,
+        "reuse_port": false,
         "fast_open": false,
         "fast_open_qlen": 20
     },
@@ -113,10 +119,35 @@ EOF
         "server_port": 3306,
         "database": "trojan",
         "username": "trojan",
-        "password": ""
+        "password": "",
+        "key": "",
+        "cert": "",
+        "ca": ""
     }
 }
 EOF
+
+    cat > /lib/systemd/system/trojan.service <<-EOF
+[Unit]
+Description=trojan
+Documentation=man:trojan(1) https://trojan-gfw.github.io/trojan/config https://trojan-gfw.github.io/trojan/
+After=network.target network-online.target nss-lookup.target mysql.service mariadb.service mysqld.service
+
+[Service]
+Type=simple
+StandardError=journal
+User=root
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+ExecStart=/usr/bin/trojan /etc/trojan/config.json
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
+RestartSec=3s
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload
 
 green "正在设置伪装站点，这里用的是我的博客"
 rm -r /etc/nginx/html
@@ -128,13 +159,18 @@ green "设置伪装站点成功"
 
 green "注册acme for ${trojan_email}"
 acme.sh --register-account -m ${trojan_email}
-acme.sh --issue --standalone -d trojan.cuimouren.cn
+systemctl stop nginx
+systemctl stop trojan
+acme.sh --issue --standalone -d ${trojan_domain}
 
 green "安装证书 for ${trojan_domain}"
-acme.sh/acme.sh  --installcert  -d  ${trojan_domain}   \
+mkdir -p /etc/trojan/trojancert/${trojan_domain}/
+acme.sh  --installcert  -d  ${trojan_domain}   \
     --key-file   /etc/trojan/trojancert/${trojan_domain}/private.key \
     --fullchain-file  /etc/trojan/trojancert/${trojan_domain}/fullchain.cer \
     --reloadcmd  "systemctl restart trojan"	
+
+
 
 green "nginx设为自启动"
 systemctl enable nginx
