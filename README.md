@@ -8,3 +8,13 @@
 ```bash
 wget https://raw.githubusercontent.com/cuiwenyao/trojan-auto-install/master/trojan-install.sh && chmod +x trojan-install.sh && ./trojan-install.sh
 ```
+
+
+linux 网络加速
+
+```bash
+wget -N --no-check-certificate "https://raw.githubusercontent.com/chiakge/Linux-NetSpeed/master/tcp.sh" && chmod +x tcp.sh && ./tcp.sh
+```
+
+来源于
+https://github.com/chiakge/Linux-NetSpeed
