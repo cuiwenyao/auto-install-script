@@ -12,13 +12,66 @@ function version_lt(){
     test "$(echo "$@" | tr " " "\n" | sort -rV | head -n 1)" != "$1"; 
 }
 
-green "安装trojan"
-# 安装trojan 要求 Ubuntu 20.04 以上
-apt -y install trojan
 
 read -p "请输入你的域名 :" trojan_domain
 
-read -p "请输入密码 :" trojan_passwd
+read -p "请输入你要设置的trojan密码 :" trojan_passwd
+
+read -p "请输入你的邮箱用来注册acme(必须) :" trojan_email
+
+
+green "安装trojan"
+# 安装trojan 要求 Ubuntu 20.04 以上
+apt -y install trojan
+#安装nginx
+apt -y install nginx
+#安装git
+apt -y install git
+#安装letsencrypt
+green "安装letsencrypt"
+apt -y install letsencrypt
+#安装 socat for acme
+apt -y install socat
+#acme
+curl https://get.acme.sh | sh
+source ~/.bashrc
+
+
+#获取证书
+#停止web服务
+green "停止web服务"
+systemctl stop trojan
+systemctl stop nginx
+systemctl stop apache
+systemctl stop apache2
+
+#写入nginx配置
+green "正在写入nginx配置文件 /etc/nginx/nginx.conf"
+        cat > /etc/nginx/nginx.conf <<-EOF
+user  root;
+worker_processes  1;
+error_log  /var/log/nginx/error.log warn;
+pid        /var/run/nginx.pid;
+events {
+    worker_connections  1024;
+}
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    access_log  /var/log/nginx/access.log;
+    sendfile        on;
+    keepalive_timeout  120;
+    client_max_body_size 20m;
+    server {
+        listen       80;
+        server_name  ${trojan_domain};
+        root /etc/nginx/html;
+        index index.php index.html index.htm;
+    }
+}
+EOF
+
 
 # 写入配置文件
     cat > /etc/trojan/config.json <<-EOF
@@ -33,8 +86,8 @@ read -p "请输入密码 :" trojan_passwd
     ],
     "log_level": 1,
     "ssl": {
-        "cert": "/etc/trojan/trojancert/${trojan_domain}.crt",
-        "key": "/etc/trojan/trojancert/${trojan_domain}.key",
+        "cert": "/etc/trojan/trojancert/${trojan_domain}/fullchain.cer",
+        "key": "/etc/trojan/trojancert/${trojan_domain}/private.key",
         "key_password": "",
         "cipher_tls13":"TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384",
         "prefer_server_cipher": true,
@@ -64,6 +117,30 @@ read -p "请输入密码 :" trojan_passwd
     }
 }
 EOF
+
+green "正在设置伪装站点，这里用的是我的博客"
+rm -r /etc/nginx/html
+mkdir /etc/nginx/html
+git clone https://github.com/cuiwenyao/cuiwenyao.io.git
+mv cuiwenyao.io/* /etc/nginx/html/
+rm -rf cuiwneyao.io
+green "设置伪装站点成功"
+
+green "注册acme for ${trojan_email}"
+acme.sh --register-account -m ${trojan_email}
+acme.sh --issue --standalone -d trojan.cuimouren.cn
+
+green "安装证书 for ${trojan_domain}"
+acme.sh/acme.sh  --installcert  -d  ${trojan_domain}   \
+    --key-file   /etc/trojan/trojancert/${trojan_domain}/private.key \
+    --fullchain-file  /etc/trojan/trojancert/${trojan_domain}/fullchain.cer \
+    --reloadcmd  "systemctl restart trojan"	
+
+green "nginx设为自启动"
+systemctl enable nginx
+
+green "restart nginx"
+systemctl restart nginx
 
 green "trojan设为自启动"
 systemctl enable trojan
@@ -667,4 +744,7 @@ rules:
     - 'IP-CIDR,149.154.164.0/22,Proxy'
     - 'MATCH,Proxy'
 EOF
+
+
+
 
