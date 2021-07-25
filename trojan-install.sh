@@ -12,6 +12,7 @@ function version_lt(){
     test "$(echo "$@" | tr " " "\n" | sort -rV | head -n 1)" != "$1"; 
 }
 
+read -p "确认安装 :" ack
 
 read -p "请输入你的域名 :" trojan_domain
 
