@@ -159,14 +159,15 @@ rm -rf cuiwneyao.io
 green "设置伪装站点成功"
 
 green "注册acme for ${trojan_email}"
-acme.sh --register-account -m ${trojan_email}
+
+~/.acme.sh/acme.sh --register-account -m ${trojan_email}
 systemctl stop nginx
 systemctl stop trojan
-acme.sh --issue --standalone -d ${trojan_domain}
+~/.acme.sh/acme.sh  --issue --standalone -d ${trojan_domain}
 
 green "安装证书 for ${trojan_domain}"
 mkdir -p /etc/trojan/trojancert/${trojan_domain}/
-acme.sh  --installcert  -d  ${trojan_domain}   \
+~/.acme.sh/acme.sh  --installcert  -d  ${trojan_domain}   \
     --key-file   /etc/trojan/trojancert/${trojan_domain}/private.key \
     --fullchain-file  /etc/trojan/trojancert/${trojan_domain}/fullchain.cer \
     --reloadcmd  "systemctl restart trojan"	
