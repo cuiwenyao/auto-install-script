@@ -20,6 +20,10 @@ read -p "请输入你要设置的trojan密码 :" trojan_passwd
 
 read -p "请输入你的邮箱用来注册acme(必须) :" trojan_email
 
+green "apt-get update"
+apt-get update
+green "apt-get upgrade"
+apt-get upgrade
 
 green "安装trojan"
 # 安装trojan 要求 Ubuntu 20.04 以上
