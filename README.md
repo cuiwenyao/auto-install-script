@@ -31,3 +31,10 @@ https://github.com/chiakge/Linux-NetSpeed
 wget https://raw.githubusercontent.com/cuiwenyao/auto-install-script/master/trojan-install-docker.sh && chmod u+x trojan-install-docker.sh && ./trojan-install-docker.sh
 ```
 
+## code-server-install
+
+自动安装code-server
+
+```shell
+wget https://raw.githubusercontent.com/cuiwenyao/auto-install-script/master/code-server-install.sh && chmod u+x code-server-install.sh && ./code-server-install.sh 
+```
