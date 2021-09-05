@@ -16,7 +16,7 @@ read -p "确认安装 :" ack
 
 read -p "请输入你的域名 :" domain
 
-read -p "请输入你要设置的trojan密码 :" passwd
+read -p "请输入你要设置的code-server密码 :" passwd
 
 green "apt-get update"
 apt update
@@ -72,12 +72,12 @@ EOF
 
 cd /etc/nginx/sites-enabled/
 ln -s /etc/nginx/sites-available/code-server /etc/nginx/sites-enabled/code-server
+nginx -t
+nginx -s reload
 nginx -s stop
 
 green "secure your site"
-add-apt-repository ppa:certbot/certbot
-apt update
-apt install python-certbot-nginx
+apt install certbot python3-certbot-nginx
 ufw allow https
 ufw reload
 certbot --nginx -d ${domain}
