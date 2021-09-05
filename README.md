@@ -1,4 +1,8 @@
-# trojan-auto-install
+# auto install script 
+
+这是一个自动配置各种应用的脚本合集。
+
+## trojan-auto-install
 学习Linux的shell命令使用方法，顺便写一个Trojan自动配置的程序
 
 本脚本只支持Ubuntu20.04及以上版本
@@ -18,3 +22,5 @@ wget -N --no-check-certificate "https://raw.githubusercontent.com/chiakge/Linux-
 
 来源于
 https://github.com/chiakge/Linux-NetSpeed
+
+
