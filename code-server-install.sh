@@ -25,10 +25,10 @@ green "install nginx"
 apt -y install nginx
 
 green "install code-server"
-wget https://github.com/cdr/code-server/releases/download/v3.10.1/code-server-3.10.1-linux-amd64.tar.gz
-tar -xzf code-server-3.10.1-linux-amd64.tar.gz
+wget https://github.com/cdr/code-server/releases/download/v3.11.1/code-server-3.11.1-linux-amd64.tar.gz
+tar -xzf code-server-3.11.1-linux-amd64.tar.gz
 rm -rf /usr/lib/code-server
-mv code-server-3.10.1-linux-amd64 /usr/lib/code-server
+mv code-server-3.11.1-linux-amd64 /usr/lib/code-server
 rm -rf /usr/bin/code-server
 ln -s /usr/lib/code-server/code-server /usr/bin/code-server
 rm -rf /var/lib/code-server
@@ -51,8 +51,8 @@ WantedBy=multi-user.target
 EOF
 
 green "反向代理"
-rm -rf /etc/nginx/sites-available/code-server
-        cat > /etc/nginx/sites-available/code-server <<-EOF
+rm -rf /etc/nginx/sites-available/${domain}
+        cat > /etc/nginx/sites-available/${domain} <<-EOF
 server {
     listen 80;
     listen [::]:80;
@@ -69,17 +69,18 @@ server {
 EOF
 
 cd /etc/nginx/sites-enabled/
-ln -s /etc/nginx/sites-available/code-server /etc/nginx/sites-enabled/code-server
+ln -s /etc/nginx/sites-available/${domain} /etc/nginx/sites-enabled/${domain}
 nginx -t
 nginx -s reload
 nginx -s stop
 
 green "secure your site"
-apt install certbot python3-certbot-nginx
+apt -y install certbot python3-certbot-nginx
 ufw allow https
 ufw reload
 certbot --nginx -d ${domain}
 systemctl restart nginx
+systemctl restart code-server
 
 green "请访问你的网站 ${domain}"
 
