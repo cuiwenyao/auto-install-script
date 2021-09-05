@@ -19,9 +19,7 @@ read -p "请输入你的域名 :" domain
 read -p "请输入你要设置的trojan密码 :" passwd
 
 green "apt-get update"
-apt-get update
-green "apt-get upgrade"
-apt-get upgrade
+apt update
 
 green "install nginx"
 apt -y install nginx
@@ -31,11 +29,12 @@ mkdir ~/code-server
 cd ~/code-server
 wget https://github.com/cdr/code-server/releases/download/v3.10.1/code-server-3.10.1-linux-amd64.tar.gz
 tar -xzvf code-server-3.10.1-linux-amd64.tar.gz
-mv code-server-3.10.1-linux-amd64 code-server
 rm -rf /usr/lib/code-server
-cp -r code-server /usr/lib/code-server
+mv code-server-3.10.1-linux-amd64 /usr/lib/code-server
+rm -rf /usr/bin/code-server
 ln -s /usr/lib/code-server/code-server /usr/bin/code-server
-mkdir /var/lib/code-server
+rm -rf /var/lib/code-server
+mkdir -p /var/lib/code-server
 rm -rf  /lib/systemd/system/code-server.service
 green "configure code-server"
         cat > /lib/systemd/system/code-server.service <<-EOF
@@ -53,7 +52,7 @@ Restart=always
 WantedBy=multi-user.target
 EOF
 
-green "pose out"
+green "反向代理"
 rm -rf /etc/nginx/sites-available/code-server
         cat > /etc/nginx/sites-available/code-server <<-EOF
 server {
@@ -72,17 +71,17 @@ server {
 EOF
 
 cd /etc/nginx/sites-enabled/
-ln -s /etc/nginx/sites-available/code-server code-server
-nginx -t
-systemctl restart nginx
+ln -s /etc/nginx/sites-available/code-server /etc/nginx/sites-enabled/code-server
+nginx -s stop
 
 green "secure your site"
-
 add-apt-repository ppa:certbot/certbot
+apt update
 apt install python-certbot-nginx
 ufw allow https
 ufw reload
 certbot --nginx -d ${domain}
+systemctl restart nginx
 
 green "请访问你的网站 ${domain}"
 
