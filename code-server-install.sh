@@ -26,7 +26,7 @@ apt -y install nginx
 
 green "install code-server"
 wget https://github.com/cdr/code-server/releases/download/v3.10.1/code-server-3.10.1-linux-amd64.tar.gz
-tar -xzvf code-server-3.10.1-linux-amd64.tar.gz
+tar -xzf code-server-3.10.1-linux-amd64.tar.gz
 rm -rf /usr/lib/code-server
 mv code-server-3.10.1-linux-amd64 /usr/lib/code-server
 rm -rf /usr/bin/code-server
