@@ -82,7 +82,7 @@ certbot --nginx -d ${domain}
 systemctl restart nginx
 systemctl restart code-server
 
-green "请访问你的网站 ${domain}"
+green "请访问你的网站 https://${domain}"
 
 green "密码为 ${passwd}"
 

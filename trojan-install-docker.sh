@@ -178,6 +178,7 @@ green "4. 启动nginx和trojan"
 cat > ~/trojan_docker/Dockerfile  <<-EOF
 FROM ubuntu:20.04
 COPY ./trojan_docker.tar /root/
+EXPOSE ${port}
 RUN apt -y update \
 && apt -y install nginx trojan \
 && cd ~         \
