@@ -107,7 +107,7 @@ nginx -s stop
 #4. 在宿主机中配置好相关配置文件 /root/.config/code-server/config.yaml
 mkdir -p /root/code-server-install/
 cd /root/code-server-install/
-wget wget https://github.com/cdr/code-server/releases/download/v3.11.1/code-server-3.11.1-linux-amd64.tar.gz
+wget https://github.com/cdr/code-server/releases/download/v3.11.1/code-server-3.11.1-linux-amd64.tar.gz
 mv code-server-3.11.1-linux-amd64.tar.gz code-server.tar.gz
 
 cat > /root/code-server-install/code-server-config.yaml <<-EOF
@@ -130,7 +130,7 @@ rm code-server.tar.gz \
 rm -rf /root/.config/code-server/config.yaml \
 mv code-server-config.yaml /root/.config/code-server/config.yaml 
 
-CMD ["sh","-c","/root/code-server/code-server"]
+#CMD ["sh","-c","/root/code-server/code-server"]
 EOF
 
 #5. 构建一个镜像
