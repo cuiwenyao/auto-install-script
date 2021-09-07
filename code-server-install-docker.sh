@@ -134,7 +134,7 @@ rm code-server.tar.gz \
 rm -rf /root/.config/code-server/config.yaml \
 mv code-server-config.yaml /root/.config/code-server/config.yaml 
 
-CMD ["sh","-c","/root/code-server/code-server"]
+#CMD ["sh","-c","/root/code-server/code-server"]
 EOF
 
 #5. 构建一个镜像
@@ -145,6 +145,7 @@ docker build -f ~/code-server-install/Dockerfile -t code-server-image .
 
 
 #6. 运行
+systemctl restart nginx
 docker container rm -f code-server-docker
 docker run --name code-server-docker -itd -p ${port}:8080  code-server-image
 
