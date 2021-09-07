@@ -109,7 +109,10 @@ rm -rf /root/code-server-install
 mkdir -p /root/code-server-install
 cd /root/code-server-install
 wget https://github.com/cdr/code-server/releases/download/v3.11.1/code-server-3.11.1-linux-amd64.tar.gz
-mv code-server-3.11.1-linux-amd64.tar.gz code-server.tar.gz
+tar -xzf code-server-3.11.1-linux-amd64.tar.gz
+mv code-server-3.11.1-linux-amd64 code-server
+tar -cf code-server.tar code-server
+gzip code-server.tar
 
 cat > /root/code-server-install/code-server-config.yaml <<-EOF
 bind-addr: 127.0.0.1:8080
@@ -131,7 +134,7 @@ rm code-server.tar.gz \
 rm -rf /root/.config/code-server/config.yaml \
 mv code-server-config.yaml /root/.config/code-server/config.yaml 
 
-#CMD ["sh","-c","/root/code-server/code-server"]
+CMD ["sh","-c","/root/code-server/code-server"]
 EOF
 
 #5. 构建一个镜像
@@ -142,8 +145,8 @@ docker build -f ~/code-server-install/Dockerfile -t code-server-image .
 
 
 #6. 运行
-docker container rm -f code-server_docker
-docker run --name code-server_docker -itd -p ${port}:8080  code-server-image
+docker container rm -f code-server-docker
+docker run --name code-server-docker -itd -p ${port}:8080  code-server-image
 
 #7. 保存镜像
 green "保存镜像至 ~/code-server-image.tar.gz"
