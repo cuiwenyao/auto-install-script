@@ -46,3 +46,11 @@ wget https://raw.githubusercontent.com/cuiwenyao/auto-install-script/master/code
 ```shell
 wget https://raw.githubusercontent.com/cuiwenyao/auto-install-script/master/code-server-install-docker.sh && chmod u+x code-server-install-docker.sh && ./code-server-install-docker.sh
 ```
+
+## test
+
+自动安装code-server
+
+```shell
+wget https://raw.githubusercontent.com/cuiwenyao/auto-install-script/master/test.sh && chmod u+x test.sh && ./test.sh
+```

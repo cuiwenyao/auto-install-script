@@ -78,7 +78,7 @@ server {
 
     location / {
       proxy_pass http://localhost:8080/;
-      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Upgrade \$http_upgrade;
       proxy_set_header Connection upgrade;
       proxy_set_header Accept-Encoding gzip;
     }
@@ -89,8 +89,8 @@ server {
     ssl_certificate_key /root/.acme.sh/${domain}/${domain}.key; 
 }
 server {
-    if ($host = ${domain}) {
-        return 301 https://$host$request_uri;
+    if (\$host = ${domain}) {
+        return 301 https://\$host\$request_uri;
     } 
     listen 80;
     listen [::]:80;
