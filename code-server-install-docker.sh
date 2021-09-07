@@ -122,7 +122,6 @@ cert: false
 EOF
 
 #5. 编写Dockerfile并构建镜像
-
 cat > /root/code-server-install/Dockerfile  <<-EOF
 FROM ubuntu:20.04
 COPY ./code-server-config.yaml /root/
@@ -134,7 +133,9 @@ RUN cd /root/ \
 && rm -rf /root/.config/code-server/config.yaml \
 && mkdir -p /root/.config/code-server/ \
 && mv /root/code-server-config.yaml /root/.config/code-server/config.yaml \
-&& ln -s /root/code-server/code-server /bin/code-server
+&& rm -rf /etc/code-server \
+&& mv /root/code-server /etc/code-server \
+&& ln -s /etc/code-server/code-server /bin/code-server \
 CMD ["sh","-c","code-server"]
 EOF
 
@@ -143,7 +144,6 @@ green "5. 构建一个镜像"
 cd /root/code-server-install
 docker image rm -f code-server-image
 docker build -f ~/code-server-install/Dockerfile -t code-server-image .
-
 
 #6. 运行
 systemctl restart nginx

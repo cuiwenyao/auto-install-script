@@ -13,7 +13,6 @@
 wget https://raw.githubusercontent.com/cuiwenyao/auto-install-script/master/trojan-install.sh && chmod u+x trojan-install.sh && ./trojan-install.sh
 ```
 
-
 linux 网络加速
 
 ```bash
