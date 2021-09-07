@@ -49,6 +49,7 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
+systemctl daemon-reload
 
 green "反向代理"
 rm -rf /etc/nginx/sites-available/${domain}
