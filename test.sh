@@ -45,6 +45,7 @@ green "证书放在 ~/.acme.sh/${domain}"
 
 green "install code-server"
 wget https://github.com/cdr/code-server/releases/download/v3.11.1/code-server-3.11.1-linux-amd64.tar.gz
+rm -rf code-server-3.11.1-linux-amd64.tar.gz
 tar -xzf code-server-3.11.1-linux-amd64.tar.gz
 rm -rf /usr/lib/code-server
 mv code-server-3.11.1-linux-amd64 /usr/lib/code-server
@@ -99,7 +100,7 @@ server {
 }
 EOF
 
-cd /etc/nginx/sites-enabled/
+rm -rf /etc/nginx/sites-enabled/${domain}
 ln -s /etc/nginx/sites-available/${domain} /etc/nginx/sites-enabled/${domain}
 nginx -t
 nginx -s reload
@@ -111,4 +112,6 @@ systemctl restart code-server
 green "请访问你的网站 https://${domain}"
 
 green "密码为 ${passwd}"
+
+
 
