@@ -41,8 +41,6 @@ rm -rf ~/.acme/${domain}
 green "证书放在 ~/.acme.sh/${domain}"
 
 
-
-
 green "install code-server"
 wget https://github.com/cdr/code-server/releases/download/v3.11.1/code-server-3.11.1-linux-amd64.tar.gz
 rm -rf code-server-3.11.1-linux-amd64.tar.gz
@@ -69,6 +67,7 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
+systemctl daemon-reload
 
 green "反向代理"
 rm -rf /etc/nginx/sites-available/${domain}
@@ -106,6 +105,7 @@ nginx -t
 nginx -s reload
 nginx -s stop
 
+systemctl daemon-reload
 systemctl restart nginx
 systemctl restart code-server
 
