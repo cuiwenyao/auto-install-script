@@ -42,9 +42,10 @@ green "证书放在 ~/.acme.sh/${domain}"
 
 
 green "install code-server"
+cd /root/
 wget https://github.com/cdr/code-server/releases/download/v3.11.1/code-server-3.11.1-linux-amd64.tar.gz
-rm -rf code-server-3.11.1-linux-amd64.tar.gz
 tar -xzf code-server-3.11.1-linux-amd64.tar.gz
+rm -rf code-server-3.11.1-linux-amd64.tar.gz
 rm -rf /usr/lib/code-server
 mv code-server-3.11.1-linux-amd64 /usr/lib/code-server
 rm -rf /usr/bin/code-server
