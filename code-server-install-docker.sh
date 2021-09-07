@@ -115,7 +115,7 @@ tar -cf code-server.tar code-server
 gzip code-server.tar
 
 cat > /root/code-server-install/code-server-config.yaml <<-EOF
-bind-addr: 127.0.0.1:8080
+bind-addr: 0.0.0.0:8080
 auth: password
 password: ${passwd}
 cert: false
@@ -132,9 +132,11 @@ RUN cd /root/ \
 tar -xzf code-server.tar.gz \
 rm code-server.tar.gz \ 
 rm -rf /root/.config/code-server/config.yaml \
-mv code-server-config.yaml /root/.config/code-server/config.yaml 
+mkdir -p /root/.config/code-server/ \
+mv /root/code-server-config.yaml /root/.config/code-server/config.yaml \
+ln -s /root/code-server/code-server /bin/code-server
 
-#CMD ["sh","-c","/root/code-server/code-server"]
+#CMD ["sh","-c","code-server"]
 EOF
 
 #5. 构建一个镜像
