@@ -38,3 +38,11 @@ wget https://raw.githubusercontent.com/cuiwenyao/auto-install-script/master/troj
 ```shell
 wget https://raw.githubusercontent.com/cuiwenyao/auto-install-script/master/code-server-install.sh && chmod u+x code-server-install.sh && ./code-server-install.sh 
 ```
+
+## code-server-install-docker
+
+自动安装code-server
+
+```shell
+wget https://raw.githubusercontent.com/cuiwenyao/auto-install-script/master/code-server-install-docker.sh && chmod u+x code-server-install-docker.sh && ./code-server-install-docker.sh
+```

@@ -27,3 +27,39 @@ read -p "请输入你的邮箱用来注册acme(必须) :" email
 
 
 
+
+
+
+
+
+
+
+
+
+server {
+
+    server_name code.cuimouren.cn;
+
+    location / {
+      proxy_pass http://localhost:8080/;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection upgrade;
+      proxy_set_header Accept-Encoding gzip;
+    }
+
+    listen [::]:443 ssl ipv6only=on; # managed by Certbot
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/code.cuimouren.cn/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/code.cuimouren.cn/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+server {
+    if ($host = code.cuimouren.cn) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+    listen 80;
+    listen [::]:80;
+    server_name code.cuimouren.cn;
+    return 404; # managed by Certbot
+}
