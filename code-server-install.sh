@@ -18,15 +18,34 @@ read -p "请输入你的域名 :" domain
 
 read -p "请输入你要设置的code-server密码 :" passwd
 
-green "apt-get update"
-apt update
+read -p "请输入你的邮箱用来注册acme(必须) :" email
 
-green "install nginx"
-apt -y install nginx
+apt-get -y update
+apt-get -y install wget curl cron nginx socat
+
+
+#2. 获取证书
+green "2. 获取证书"
+#acme
+curl https://get.acme.sh | sh
+source ~/.bashrc
+green "停止web服务"
+systemctl stop trojan
+systemctl stop nginx
+systemctl stop apache
+systemctl stop apache2
+green "注册acme for ${email}"
+~/.acme.sh/acme.sh --register-account -m ${email}
+rm -rf ~/.acme/${domain}
+~/.acme.sh/acme.sh  --issue --standalone -d ${domain}
+green "证书放在 ~/.acme.sh/${domain}"
+
 
 green "install code-server"
+cd /root/
 wget https://github.com/cdr/code-server/releases/download/v3.11.1/code-server-3.11.1-linux-amd64.tar.gz
 tar -xzf code-server-3.11.1-linux-amd64.tar.gz
+rm -rf code-server-3.11.1-linux-amd64.tar.gz
 rm -rf /usr/lib/code-server
 mv code-server-3.11.1-linux-amd64 /usr/lib/code-server
 rm -rf /usr/bin/code-server
@@ -55,8 +74,6 @@ green "反向代理"
 rm -rf /etc/nginx/sites-available/${domain}
         cat > /etc/nginx/sites-available/${domain} <<-EOF
 server {
-    listen 80;
-    listen [::]:80;
 
     server_name ${domain};
 
@@ -66,24 +83,36 @@ server {
       proxy_set_header Connection upgrade;
       proxy_set_header Accept-Encoding gzip;
     }
+
+    listen [::]:443 ssl ipv6only=on; 
+    listen 443 ssl; 
+    ssl_certificate /root/.acme.sh/${domain}/fullchain.cer; 
+    ssl_certificate_key /root/.acme.sh/${domain}/${domain}.key; 
+}
+server {
+    if (\$host = ${domain}) {
+        return 301 https://\$host\$request_uri;
+    } 
+    listen 80;
+    listen [::]:80;
+    server_name ${domain};
+    return 404; 
 }
 EOF
 
-cd /etc/nginx/sites-enabled/
+rm -rf /etc/nginx/sites-enabled/${domain}
 ln -s /etc/nginx/sites-available/${domain} /etc/nginx/sites-enabled/${domain}
 nginx -t
 nginx -s reload
 nginx -s stop
 
-green "secure your site"
-apt -y install certbot python3-certbot-nginx
-ufw allow https
-ufw reload
-certbot --nginx -d ${domain}
+systemctl daemon-reload
 systemctl restart nginx
 systemctl restart code-server
 
 green "请访问你的网站 https://${domain}"
 
 green "密码为 ${passwd}"
+
+
 

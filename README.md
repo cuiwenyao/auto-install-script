@@ -41,7 +41,7 @@ wget https://raw.githubusercontent.com/cuiwenyao/auto-install-script/master/code
 
 ## code-server-install-docker
 
-自动安装code-server
+自动安装code-server-docker
 
 ```shell
 wget https://raw.githubusercontent.com/cuiwenyao/auto-install-script/master/code-server-install-docker.sh && chmod u+x code-server-install-docker.sh && ./code-server-install-docker.sh
