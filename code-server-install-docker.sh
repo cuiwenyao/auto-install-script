@@ -22,7 +22,7 @@ read -p "请输入你的域名 :" domain
 
 read -p "请输入你想要使用的映射端口(eg:4100):" port
 
-read -p "请输入你要设置的trojan密码 :" passwd
+read -p "请输入你要设置的code-server密码 :" passwd
 
 read -p "请输入你的邮箱用来注册acme(必须) :" email
 
@@ -129,14 +129,13 @@ COPY ./code-server-config.yaml /root/
 COPY ./code-server.tar.gz /root/
 EXPOSE ${port}
 RUN cd /root/ \
-tar -xzf code-server.tar.gz \
-rm code-server.tar.gz \ 
-rm -rf /root/.config/code-server/config.yaml \
-mkdir -p /root/.config/code-server/ \
-mv /root/code-server-config.yaml /root/.config/code-server/config.yaml \
-ln -s /root/code-server/code-server /bin/code-server
-
-#CMD ["sh","-c","code-server"]
+&& tar -xzf code-server.tar.gz \
+&& rm code-server.tar.gz \ 
+&& rm -rf /root/.config/code-server/config.yaml \
+&& mkdir -p /root/.config/code-server/ \
+&& mv /root/code-server-config.yaml /root/.config/code-server/config.yaml \
+&& ln -s /root/code-server/code-server /bin/code-server
+CMD ["sh","-c","code-server"]
 EOF
 
 #5. 构建一个镜像
