@@ -133,7 +133,7 @@ RUN cd /root/ \
 && mv /root/code-server-config.yaml /root/.config/code-server/config.yaml \
 && rm -rf /etc/code-server \
 && mv /root/code-server /etc/code-server \
-&& ln -s /etc/code-server/code-server /bin/code-server \
+&& ln -s /etc/code-server/code-server /bin/code-server 
 CMD ["sh","-c","code-server"]
 EOF
 
