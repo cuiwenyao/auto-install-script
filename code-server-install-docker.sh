@@ -127,6 +127,7 @@ FROM ubuntu:20.04
 COPY ./code-server-config.yaml /root/
 COPY ./code-server.tar.gz /root/
 EXPOSE ${port}
+VOLUME /
 RUN cd /root/ \
 && tar -xzf code-server.tar.gz \
 && rm code-server.tar.gz \ 
