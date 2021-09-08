@@ -68,8 +68,6 @@ rm /etc/nginx/sites-available/${trojan_domain}
 rm /etc/nginx/sites-enabled/${trojan_domain}
         cat > /etc/nginx/sites-available/${trojan_domain} <<-EOF
 server {
-    listen 443;
-    listen [::]:443;
     server_name ${trojan_domain};
 
     location / {
@@ -79,7 +77,7 @@ server {
       proxy_set_header Accept-Encoding gzip;
     }
 
-    listen [::]:443 ssl ipv6only=on; 
+    listen [::]:443;
     listen 443 ssl; 
     ssl_certificate /root/.acme.sh/${trojan_domain}/fullchain.cer; 
     ssl_certificate_key /root/.acme.sh/${trojan_domain}/${trojan_domain}.key; 
