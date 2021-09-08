@@ -35,8 +35,6 @@ read -p "请输入你的邮箱用来注册acme(必须) :" email
 #6. 运行
 
 #安装前准备
-mkdir -p ~/trojan_docker
-cd trojan_docker
 apt-get -y update
 apt-get -y install wget curl cron nginx socat
 
@@ -124,7 +122,6 @@ FROM ubuntu:20.04
 COPY ./code-server-config.yaml /root/
 COPY ./code-server.tar.gz /root/
 EXPOSE ${port}
-VOLUME /
 RUN cd /root/ \
 && tar -xzf code-server.tar.gz \
 && rm code-server.tar.gz \ 
@@ -157,3 +154,5 @@ green "clean-----------------------------------------"
 rm -rf ~/code-server-install
 green "访问你的网站：https://${domain}"
 green "密码：${passwd} "
+
+
