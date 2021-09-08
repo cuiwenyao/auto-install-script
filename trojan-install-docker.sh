@@ -45,7 +45,7 @@ green "2. 在宿主机中获取证书"
 curl https://get.acme.sh | sh
 source ~/.bashrc
 green "停止web服务"
-sudo kill -s 9 $(lsof -i:80 -t)
+kill -s 9 $(lsof -i:80 -t)
 green "注册acme for ${trojan_email}"
 ~/.acme.sh/acme.sh --register-account -m ${trojan_email}
 rm -rf ~/.acme/${trojan_domain}
@@ -68,7 +68,8 @@ rm /etc/nginx/sites-available/${trojan_domain}
 rm /etc/nginx/sites-enabled/${trojan_domain}
         cat > /etc/nginx/sites-available/${trojan_domain} <<-EOF
 server {
-
+    listen 443;
+    listen [::]:443;
     server_name ${trojan_domain};
 
     location / {
