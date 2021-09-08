@@ -57,11 +57,7 @@ green "2. 获取证书"
 curl https://get.acme.sh | sh
 source ~/.bashrc
 green "停止web服务"
-nginx -s stop
-systemctl stop trojan
-systemctl stop nginx
-systemctl stop apache
-systemctl stop apache2
+sudo kill -s 9 $(lsof -i:80 -t)
 green "注册acme for ${email}"
 ~/.acme.sh/acme.sh --register-account -m ${email}
 rm -rf ~/.acme/${domain}
