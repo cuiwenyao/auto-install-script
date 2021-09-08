@@ -215,6 +215,7 @@ docker build -f ~/trojan_docker/Dockerfile -t trojan_image .
 #6. 从构建完成的镜像启动一个容器，并指定端口 $port
 docker container rm -f trojan_docker
 docker run --name trojan_docker -itd -p ${port}:443  trojan_image
+systemctl restart nginx
 
 #7. 保存镜像
 green "保存镜像至 ~/trojan_image.tar.gz"
