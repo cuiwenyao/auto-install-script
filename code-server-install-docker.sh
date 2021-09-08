@@ -57,6 +57,7 @@ green "2. 获取证书"
 curl https://get.acme.sh | sh
 source ~/.bashrc
 green "停止web服务"
+nginx -s stop
 systemctl stop trojan
 systemctl stop nginx
 systemctl stop apache
