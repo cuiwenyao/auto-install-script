@@ -43,10 +43,7 @@ source ~/.bashrc
 #获取证书
 #停止web服务
 green "停止web服务"
-systemctl stop trojan
-systemctl stop nginx
-systemctl stop apache
-systemctl stop apache2
+sudo kill -s 9 $(lsof -i:80 -t)
 
 #写入nginx配置
 green "正在写入nginx配置文件 /etc/nginx/nginx.conf"

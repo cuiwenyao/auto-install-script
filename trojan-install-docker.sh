@@ -45,10 +45,7 @@ green "2. 在宿主机中获取证书"
 curl https://get.acme.sh | sh
 source ~/.bashrc
 green "停止web服务"
-systemctl stop trojan
-systemctl stop nginx
-systemctl stop apache
-systemctl stop apache2
+sudo kill -s 9 $(lsof -i:80 -t)
 green "注册acme for ${trojan_email}"
 ~/.acme.sh/acme.sh --register-account -m ${trojan_email}
 rm -rf ~/.acme/${trojan_domain}
