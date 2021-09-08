@@ -64,7 +64,8 @@ green "证书放在 ~/.acme.sh/${domain}"
 
 #3. 在宿主机中配置好到docker的反向代理 ${port}:8080
 green "反向代理"
-rm -rf /etc/nginx/sites-available/${domain}
+rm /etc/nginx/sites-available/${trojan_domain}
+rm /etc/nginx/sites-enabled/${trojan_domain}
         cat > /etc/nginx/sites-available/${domain} <<-EOF
 server {
 
@@ -93,7 +94,6 @@ server {
 }
 EOF
 
-rm -rf /etc/nginx/sites-enabled/${domain}
 ln -s /etc/nginx/sites-available/${domain} /etc/nginx/sites-enabled/${domain}
 nginx -t
 nginx -s reload
