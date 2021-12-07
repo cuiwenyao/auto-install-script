@@ -16,7 +16,7 @@ read -p "确认安装(enter) :" ack
 
 read -p "请输入你的域名 :" trojan_domain
 
-read -p "请输入你想要使用的映射端口(eg:4000):" port
+read -p "请输入你想要使用的起始映射端口(eg:4000):" port
 
 read -p "请输入你要设置的trojan密码 :" trojan_passwd
 
@@ -49,7 +49,7 @@ kill -s 9 $(lsof -i:80 -t)
 green "注册acme for ${trojan_email}"
 ~/.acme.sh/acme.sh --register-account -m ${trojan_email}
 rm -rf ~/.acme/${trojan_domain}
-~/.acme.sh/acme.sh  --issue --standalone -d ${trojan_domain}
+~/.acme.sh/acme.sh  --issue   --standalone --keylength ec-256 --server letsencrypt -d ${trojan_domain}
 green "安装证书 for ${trojan_domain}"
 rm -rf ~/trojan_docker/trojancert/${trojan_domain}
 mkdir -p ~/trojan_docker/trojancert/${trojan_domain}
@@ -213,7 +213,13 @@ docker build -f ~/trojan_docker/Dockerfile -t trojan_image .
 
 #6. 从构建完成的镜像启动一个容器，并指定端口 $port
 docker container rm -f trojan_docker
-docker run --name trojan_docker -itd -p ${port}:443  trojan_image
+port_end=$port+10
+i=$port
+while(( $i <= $port_end))
+do
+docker run  -itd -p $i:443  trojan_image
+let i++
+done 
 systemctl restart nginx
 
 #7. 保存镜像
