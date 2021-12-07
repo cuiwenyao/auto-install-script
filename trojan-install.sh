@@ -167,7 +167,7 @@ green "注册acme for ${trojan_email}"
 systemctl stop nginx
 systemctl stop trojan
 rm -rf ~/.acme/${trojan_domain}
-~/.acme.sh/acme.sh  --issue --standalone -d ${trojan_domain}
+~/.acme.sh/acme.sh  --issue   --standalone --keylength ec-256 --server letsencrypt -d ${trojan_domain}
 
 green "安装证书 for ${trojan_domain}"
 rm -rf /etc/trojan/trojancert/${trojan_domain}/

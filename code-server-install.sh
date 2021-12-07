@@ -34,7 +34,7 @@ sudo kill -s 9 $(lsof -i:80 -t)
 green "注册acme for ${email}"
 ~/.acme.sh/acme.sh --register-account -m ${email}
 rm -rf ~/.acme/${domain}
-~/.acme.sh/acme.sh  --issue --standalone -d ${domain}
+~/.acme.sh/acme.sh  --issue   --standalone --keylength ec-256 --server letsencrypt -d ${domain}
 green "证书放在 ~/.acme.sh/${domain}"
 
 
