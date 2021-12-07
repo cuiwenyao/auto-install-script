@@ -16,6 +16,8 @@ read -p "确认安装 :" ack
 
 read -p "请输入你的域名 :" domain
 
+read -p "请输入你的想要使用的端口 :" port
+
 read -p "请输入你要设置的code-server密码 :" passwd
 
 read -p "请输入你的邮箱用来注册acme(必须) :" email
@@ -59,7 +61,7 @@ After=nginx.service
 [Service]
 Type=simple
 Environment=PASSWORD=${passwd}
-ExecStart=/usr/bin/code-server --bind-addr 127.0.0.1:8080 --user-data-dir /var/lib/code-server --auth password
+ExecStart=/usr/bin/code-server --bind-addr 127.0.0.1:${port} --user-data-dir /var/lib/code-server --auth password
 Restart=always
 
 [Install]
@@ -75,7 +77,7 @@ server {
     server_name ${domain};
 
     location / {
-      proxy_pass http://localhost:8080/;
+      proxy_pass http://localhost:${port}/;
       proxy_set_header Upgrade \$http_upgrade;
       proxy_set_header Connection upgrade;
       proxy_set_header Accept-Encoding gzip;
