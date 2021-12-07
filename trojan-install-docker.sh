@@ -213,7 +213,7 @@ docker build -f ~/trojan_docker/Dockerfile -t trojan_image .
 
 #6. 从构建完成的镜像启动一个容器，并指定端口 $port
 docker container rm -f trojan_docker
-port_end=$port+10
+port_end=$port+0
 i=$port
 while(( $i <= $port_end))
 do
