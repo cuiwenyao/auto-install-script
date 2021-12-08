@@ -37,7 +37,21 @@ green "注册acme for ${email}"
 ~/.acme.sh/acme.sh --register-account -m ${email}
 rm -rf ~/.acme/${domain}
 ~/.acme.sh/acme.sh  --issue   --standalone --keylength ec-256 --server letsencrypt -d ${domain}
+mkdir -p ~/.ssl/${domain}
+~/.acme.sh/acme.sh  --installcert  -d  ${domain}   \
+    --key-file   ~/.ssl/${domain}/private.key \
+    --fullchain-file  ~/.ssl/${domain}/fullchain.cer 
 green "证书放在 ~/.acme.sh/${domain}"
+
+
+
+mkdir -p ~/.ssl/code-server-angeles.cuimouren.cn
+~/.acme.sh/acme.sh  --installcert  -d  code-server-angeles.cuimouren.cn  \
+    --key-file   ~/.ssl/code-server-angeles.cuimouren.cn/private.key \
+    --fullchain-file  ~/.ssl/code-server-angeles.cuimouren.cn/fullchain.cer 
+
+
+
 
 
 green "install code-server"
@@ -85,8 +99,8 @@ server {
 
     listen [::]:443 ssl ipv6only=on; 
     listen 443 ssl; 
-    ssl_certificate /root/.acme.sh/${domain}/fullchain.cer; 
-    ssl_certificate_key /root/.acme.sh/${domain}/${domain}.key; 
+    ssl_certificate  ~/.ssl/${domain}/fullchain.cer; 
+    ssl_certificate_key  ~/.ssl/${domain}.key; 
 }
 server {
     if (\$host = ${domain}) {
