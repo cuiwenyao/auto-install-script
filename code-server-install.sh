@@ -41,7 +41,10 @@ mkdir -p ~/.ssl/${domain}
 ~/.acme.sh/acme.sh  --installcert  -d  ${domain}   \
     --key-file   ~/.ssl/${domain}/private.key \
     --fullchain-file  ~/.ssl/${domain}/fullchain.cer 
-green "证书放在 ~/.acme.sh/${domain}"
+cp ~/.acme.sh/${domain}_ecc/fullchain.cer  ~/.ssl/${domain}/fullchain.cer
+cp ~/.acme.sh/${domain}_ecc/${domain}.key  ~/.ssl/${domain}/private.key
+green "证书放在 ~/.ssl.sh/${domain}"
+
 
 
 
