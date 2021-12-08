@@ -45,13 +45,6 @@ green "证书放在 ~/.acme.sh/${domain}"
 
 
 
-mkdir -p ~/.ssl/code-server-angeles.cuimouren.cn
-~/.acme.sh/acme.sh  --installcert  -d  code-server-angeles.cuimouren.cn  \
-    --key-file   ~/.ssl/code-server-angeles.cuimouren.cn/private.key \
-    --fullchain-file  ~/.ssl/code-server-angeles.cuimouren.cn/fullchain.cer 
-
-
-
 
 
 green "install code-server"
@@ -100,7 +93,7 @@ server {
     listen [::]:443 ssl ipv6only=on; 
     listen 443 ssl; 
     ssl_certificate  ~/.ssl/${domain}/fullchain.cer; 
-    ssl_certificate_key  ~/.ssl/${domain}.key; 
+    ssl_certificate_key  ~/.ssl/${domain}/privare.key; 
 }
 server {
     if (\$host = ${domain}) {
