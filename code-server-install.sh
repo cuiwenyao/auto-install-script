@@ -96,7 +96,7 @@ server {
     listen [::]:443 ssl ipv6only=on; 
     listen 443 ssl; 
     ssl_certificate  ~/.ssl/${domain}/fullchain.cer; 
-    ssl_certificate_key  ~/.ssl/${domain}/privare.key; 
+    ssl_certificate_key  ~/.ssl/${domain}/private.key; 
 }
 server {
     if (\$host = ${domain}) {
@@ -109,6 +109,7 @@ server {
 }
 EOF
 
+cd /etc/nginx/sites-enabled/
 rm -rf /etc/nginx/sites-enabled/${domain}
 ln -s /etc/nginx/sites-available/${domain} /etc/nginx/sites-enabled/${domain}
 nginx -t
