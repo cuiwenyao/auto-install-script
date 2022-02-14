@@ -216,11 +216,11 @@ docker build -f ~/trojan_docker/Dockerfile -t trojan_image .
 
 #6. 从构建完成的镜像启动一个容器，并指定端口 $port
 docker container rm -f trojan_docker
-port_end=$port+0
+port_end=$port+9
 i=$port
 while(( $i <= $port_end))
 do
-docker run  -itd -p $i:443  trojan_image
+docker run  -itd -p $i:443 --name trojan${i} --restart=always  trojan_image
 let i++
 done 
 systemctl restart nginx
@@ -277,10 +277,32 @@ EOF
 rm -rf config_clash.yml
 cat > config_clash.yml <<-EOF
 proxies:
-    - {type: trojan, name: 'trojan', server: '$trojan_domain', port: ${port}, password: '$trojan_passwd', sni: download.windowsupdate.com, skip-cert-verify: true}
+    - {type: trojan, name: '${trojan_domain}: ${expr ${port} + 0}', server: '${trojan_domain}', port: ${expr ${port} + 0}, password: 'Yaoyao1234', sni: angeles.cuimouren.cn} #, skip-cert-verify: true
+    - {type: trojan, name: '${trojan_domain}: ${expr ${port} + 1}', server: '${trojan_domain}', port: ${expr ${port} + 1}, password: 'Yaoyao1234', sni: angeles.cuimouren.cn} #, skip-cert-verify: true
+    - {type: trojan, name: '${trojan_domain}: ${expr ${port} + 2}', server: '${trojan_domain}', port: ${expr ${port} + 2}, password: 'Yaoyao1234', sni: angeles.cuimouren.cn} #, skip-cert-verify: true
+    - {type: trojan, name: '${trojan_domain}: ${expr ${port} + 3}', server: '${trojan_domain}', port: ${expr ${port} + 3}, password: 'Yaoyao1234', sni: angeles.cuimouren.cn} #, skip-cert-verify: true
+    - {type: trojan, name: '${trojan_domain}: ${expr ${port} + 4}', server: '${trojan_domain}', port: ${expr ${port} + 4}, password: 'Yaoyao1234', sni: angeles.cuimouren.cn} #, skip-cert-verify: true
+    - {type: trojan, name: '${trojan_domain}: ${expr ${port} + 5}', server: '${trojan_domain}', port: ${expr ${port} + 5}, password: 'Yaoyao1234', sni: angeles.cuimouren.cn} #, skip-cert-verify: true
+    - {type: trojan, name: '${trojan_domain}: ${expr ${port} + 6}', server: '${trojan_domain}', port: ${expr ${port} + 6}, password: 'Yaoyao1234', sni: angeles.cuimouren.cn} #, skip-cert-verify: true
+    - {type: trojan, name: '${trojan_domain}: ${expr ${port} + 7}', server: '${trojan_domain}', port: ${expr ${port} + 7}, password: 'Yaoyao1234', sni: angeles.cuimouren.cn} #, skip-cert-verify: true
+    - {type: trojan, name: '${trojan_domain}: ${expr ${port} + 8}', server: '${trojan_domain}', port: ${expr ${port} + 8}, password: 'Yaoyao1234', sni: angeles.cuimouren.cn} #, skip-cert-verify: true
+    - {type: trojan, name: '${trojan_domain}: ${expr ${port} + 9}', server: '${trojan_domain}', port: ${expr ${port} + 9}, password: 'Yaoyao1234', sni: angeles.cuimouren.cn} #, skip-cert-verify: true
+
 proxy-groups:
-    - {name: PROXY, type: select, proxies: [自动选择, 'trojan']}
-    - {name: 自动选择, type: url-test, proxies: ['trojan'], url: 'http://www.gstatic.com/generate_204', interval: 300} 
+    - {name: PROXY, type: select, 
+    proxies: [
+    ${trojan_domain}: ${expr ${port} + 0},
+    ${trojan_domain}: ${expr ${port} + 1},
+    ${trojan_domain}: ${expr ${port} + 2},
+    ${trojan_domain}: ${expr ${port} + 3},
+    ${trojan_domain}: ${expr ${port} + 4},
+    ${trojan_domain}: ${expr ${port} + 5},
+    ${trojan_domain}: ${expr ${port} + 6},
+    ${trojan_domain}: ${expr ${port} + 7},
+    ${trojan_domain}: ${expr ${port} + 8},
+    ${trojan_domain}: ${expr ${port} + 9}], 
+    url: 'http://www.gstatic.com/generate_204', interval: 300} 
+
 
 # Source: https://github.com/Loyalsoldier/clash-rules
 rules:
@@ -399,4 +421,5 @@ rule-providers:
     url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt"
     path: ./ruleset/applications.yaml
     interval: 86400
+
 EOF
