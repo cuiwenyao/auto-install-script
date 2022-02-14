@@ -53,9 +53,11 @@ rm -rf ~/.acme/${trojan_domain}
 green "安装证书 for ${trojan_domain}"
 rm -rf ~/trojan_docker/trojancert/${trojan_domain}
 mkdir -p ~/trojan_docker/trojancert/${trojan_domain}
-~/.acme.sh/acme.sh  --installcert  -d  ${trojan_domain}   \
-    --key-file   ~/trojan_docker/trojancert/${trojan_domain}/private.key \
-    --fullchain-file  ~/trojan_docker/trojancert/${trojan_domain}/fullchain.cer 
+cp ~/.acme.sh/${trojan_domain}_ecc/${trojan_domain}.key ~/trojan_docker/trojancert/${trojan_domain}/private.key
+cp ~/.acme.sh/${trojan_domain}_ecc/fullchain.cer ~/trojan_docker/trojancert/${trojan_domain}/fullchain.cer
+# ~/.acme.sh/acme.sh  --installcert  -d  ${trojan_domain}   \
+#     --key-file   ~/trojan_docker/trojancert/${trojan_domain}/private.key \
+#     --fullchain-file  ~/trojan_docker/trojancert/${trojan_domain}/fullchain.cer 
 #证书放在 ~/trojan_docker/trojancert/${trojan_domain} 中
 green "证书放在 ~/trojan_docker/trojancert/${trojan_domain}"
 #3. 在宿主机中获取伪装网页
