@@ -277,7 +277,7 @@ EOF
 rm -rf config_clash.yml
 cat > config_clash.yml <<-EOF
 proxies:
-    - {type: trojan, name: '${trojan_domain}: ${expr ${port} + 0}', server: '${trojan_domain}', port: ${expr ${port} + 0}, password: 'Yaoyao1234', sni: angeles.cuimouren.cn} #, skip-cert-verify: true
+    - {type: trojan, name: '${trojan_domain}: expr ${port} + 0', server: '${trojan_domain}', port: expr ${port} + 0, password: 'Yaoyao1234', sni: angeles.cuimouren.cn} #, skip-cert-verify: true
     - {type: trojan, name: '${trojan_domain}: ${expr ${port} + 1}', server: '${trojan_domain}', port: ${expr ${port} + 1}, password: 'Yaoyao1234', sni: angeles.cuimouren.cn} #, skip-cert-verify: true
     - {type: trojan, name: '${trojan_domain}: ${expr ${port} + 2}', server: '${trojan_domain}', port: ${expr ${port} + 2}, password: 'Yaoyao1234', sni: angeles.cuimouren.cn} #, skip-cert-verify: true
     - {type: trojan, name: '${trojan_domain}: ${expr ${port} + 3}', server: '${trojan_domain}', port: ${expr ${port} + 3}, password: 'Yaoyao1234', sni: angeles.cuimouren.cn} #, skip-cert-verify: true
