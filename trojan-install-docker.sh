@@ -186,11 +186,10 @@ green "1. 将**证书**和，**伪装网页**和构建镜像中nginx和trojan需
 green "2. 在docker镜像中安装nginx和trojan。"
 green "3. 将docker镜像中的**证书**和，**伪装网页**和构建镜像中nginx和trojan需要的**配置文件**放在合适的地方。"
 green "4. 启动nginx和trojan"
-
+#EXPOSE ${port}
 cat > ~/trojan_docker/Dockerfile  <<-EOF
 FROM ubuntu:20.04
 COPY ./trojan_docker.tar /root/
-EXPOSE ${port}
 RUN apt -y update \
 && apt -y install nginx trojan \
 && cd ~         \
